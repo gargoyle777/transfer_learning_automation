@@ -82,9 +82,9 @@ def predict(model, test_image_name):
     
     test_image_tensor = transform(test_image)
     if torch.cuda.is_available():
-        test_image_tensor = test_image_tensor.view(1, 3, 224, 224).cuda()
+        test_image_tensor = test_image_tensor.view(1, 3, 512, 512).cuda()
     else:
-        test_image_tensor = test_image_tensor.view(1, 3, 224, 224)
+        test_image_tensor = test_image_tensor.view(1, 3, 512, 512)
     
     with torch.no_grad():
         model.eval()
@@ -225,6 +225,7 @@ def train_and_validate(model, loss_criterion, optimizer, epochs=60):
     # Applying Transforms to the Data
 image_transforms = { 
     'train': transforms.Compose([
+        transforms.Resize(size=512),
         transforms.RandomRotation(degrees=5),
         transforms.RandomHorizontalFlip(p=0.3),
         transforms.ColorJitter(brightness=(0.5,1.5),contrast=(1),saturation=(0.5,1.5),hue=(-0.1,0.1)),
@@ -234,14 +235,14 @@ image_transforms = {
                              [0.229, 0.224, 0.225])
     ]),
     'valid': transforms.Compose([
-        transforms.Resize(size=256),
+        transforms.Resize(size=512),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406],
                              [0.229, 0.224, 0.225])
     ]),
     'test': transforms.Compose([
         transforms.Pad(padding = [random.randrange(0,50),random.randrange(0,50),random.randrange(0,50),random.randrange(0,50)] ,padding_mode='edge'),
-        transforms.Resize(size=256),
+        transforms.Resize(size=512),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406],
                              [0.229, 0.224, 0.225])
@@ -260,7 +261,7 @@ valid_directory = os.path.join(dataset, 'valid')
 test_directory = os.path.join(dataset, 'test')
 
 # Batch size
-bs = 16
+bs = 4
 
 # Number of classes
 num_classes = len(os.listdir(valid_directory))  #10#2#257
@@ -293,10 +294,10 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(train_data_size, valid_data_size, test_data_size)
 
 # Load pretrained customModel Model
-customModel=torch.load("C:\\Users\\nicco\\Documents\\PlatformIO\Projects\\ScreenAI\\imageClassification\\tailoringOutput\\model_66.pt")
+customModel=torch.load("C:\\Users\\nicco\\transfer_learning_automation\\imageClassification\\tailoringOutput\\_model_52.pt")
 customModel = customModel.to(device)
 
-# Freeze model parameters
+# unFreeze model parameters
 for param in customModel.parameters():
     param.requires_grad = True
 
@@ -307,5 +308,7 @@ optimizer = optim.Adam(customModel.parameters())
 # Train the model for  epochs
 num_epochs = 25
 trained_model, history, best_epoch = train_and_validate(customModel, loss_func, optimizer, num_epochs)
-
-torch.save(history, pathForSaving+'_history.pt')
+# Freeze model parameters
+for param in customModel.parameters():
+    param.requires_grad = False
+torch.save(history, pathForSaving+'_history_fine.pt')
