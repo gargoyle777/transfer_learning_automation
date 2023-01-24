@@ -6,8 +6,8 @@ from pathlib import Path
 from xml.etree import ElementTree as et
 import copy
 
-photoPath = "C:\\Users\\nicco\\Documents\\PlatformIO\\Projects\\ScreenAI\\transferLearningCalc\\calcSRC"
-augmentIteration = 4
+photoPath = "C:\\Users\\nicco\\transfer_learning_automation\\imageClassification\\rawdata"
+augmentIteration = 1
 #A.CropAndPad(p=0.3 , percent=[-0.1 , 0.1], sample_independently=False),
 #   A.SafeRotate(limit=15, p=0.5, border_mode=cv2.BORDER_CONSTANT),
 #    A.SafeRotate(limit=20, p=0.15, border_mode=cv2.BORDER_CONSTANT),
@@ -21,7 +21,8 @@ transform = A.Compose(
         A.CropAndPad(percent = [-0.05, 0.05], p=0.5, pad_mode=cv2.BORDER_REPLICATE),
         A.Perspective(p=0.4, scale= 0.05,fit_output = True, pad_mode=cv2.BORDER_REPLICATE),
         A.FancyPCA(p=0.5),
-        A.HorizontalFlip(p=0.35)
+        A.HorizontalFlip(p=0.35),
+        A.VerticalFlip(p=0.35)
     ], 
     bbox_params=A.BboxParams(format= 'pascal_voc')
 )

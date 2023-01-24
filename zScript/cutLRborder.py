@@ -3,7 +3,7 @@ import os
 import cv2 as cv2
 import numpy as np
 
-ogpath = "C:\\Users\\nicco\\Documents\\PlatformIO\\Projects\\ScreenAI\\transferLearningCalc\\test_data"
+ogpath = "C:\\Users\\nicco\\transfer_learning_automation\\imageClassification\\rawnegative"
 paths =[ogpath]
 dig = True      #dig in subdir
 

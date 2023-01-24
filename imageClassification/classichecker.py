@@ -67,9 +67,9 @@ def plot_confusion_matrix(conf_mat,
 
 
 def predict(model, test_image):
-    idx_to_class={0: 'browser', 1: 'calcolatrice', 2: 'firefox', 3: 'fotocamera', 4: 'galleria', 5: 'gmail', 6: 'googletalk', 7: 'maps', 8: 'market', 9: 'musica'}
+    idx_to_class={0: 'calc', 1: 'negative'}
     transform = transforms.Compose([
-        transforms.Resize(size=224),
+        transforms.Resize(size=512),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406],
                              [0.229, 0.224, 0.225])
@@ -77,9 +77,9 @@ def predict(model, test_image):
     
     test_image_tensor = transform(test_image)
     if torch.cuda.is_available():
-        test_image_tensor = test_image_tensor.view(1, 3, 224, 224).cuda()
+        test_image_tensor = test_image_tensor.view(1, 3, 512, 512).cuda()
     else:
-        test_image_tensor = test_image_tensor.view(1, 3, 224, 224)
+        test_image_tensor = test_image_tensor.view(1, 3, 512, 512)
     
     with torch.no_grad():
         model.eval()
@@ -95,25 +95,17 @@ matplotlib.use('tkagg')
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 report=""
 matmat= {
-    "train":np.zeros((10,10)),
-    "test":np.zeros((10,10)),
-    "valid":np.zeros((10,10))
+    "train":np.zeros((2,2)),
+    "test":np.zeros((2,2)),
+    "valid":np.zeros((2,2))
 }
 
 ltoi= {
-    "browser":0,
-    "calcolatrice":1,
-    "firefox":2,
-    "fotocamera":3,
-    "galleria":4,
-    "gmail":5,
-    "googletalk":6,
-    "maps":7,
-    "market":8,
-    "musica":9
+    "calc":0,
+    "negative":1
 }
 
-customModel=torch.load("C:\\Users\\nicco\\Documents\\PlatformIO\Projects\\ScreenAI\\imageClassification\\tailoringOutput\\_model_15.pt")
+customModel=torch.load("C:\\Users\\nicco\\transfer_learning_automation\\imageClassification\\tailoringOutput\\fine_model_23.pt")
 customModel = customModel.to(device)
 
 # Freeze model parameters
@@ -125,17 +117,17 @@ dataset = os.path.join(Path(__file__).parents[0], 'iconDataset')
 
 
 dirs = ['train','valid', 'test']
-labels = ["browser", "calcolatrice","firefox","fotocamera","galleria","gmail","googletalk","maps","market","musica"]
+labels = ["calc","negative"]
 for bigdir in dirs:
     bigdirPath = os.path.join(os.path.join(dataset,bigdir))
     for label in labels:
         smalldir = os.path.join(bigdirPath,label)
         images = os.listdir(smalldir)
         for image in images:
-            print("teasting an image\n")
             img_path=os.path.join(smalldir,image)
             prediction=predict(customModel,Image.open(img_path))
             if prediction!=label:
                 report=report+"{0} should be {1} but was identified as {2}\n".format(image,label,prediction)
-            matmat[bigdir][ltoi[prediction]][ltoi[label]]=matmat[bigdir][ltoi[prediction]][ltoi[label]]+1
-    plot_confusion_matrix(matmat[bigdir],labels,path="C:\\Users\\nicco\\Documents\\PlatformIO\\Projects\\ScreenAI\\imageClassification\\tailoringOutput",title=bigdir)
+            matmat[bigdir][ltoi[label]][ltoi[prediction]]=matmat[bigdir][ltoi[label]][ltoi[prediction]]+1
+    plot_confusion_matrix(matmat[bigdir],labels,path="C:\\Users\\nicco\\transfer_learning_automation\\imageClassification\\tailoringOutput",title=bigdir)
+    print(report)

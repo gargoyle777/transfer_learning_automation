@@ -29,7 +29,6 @@ for path in paths:
             continue
         imagePath = path +"\\" +imageName 
         image = cv2.imread( imagePath )    
-        image = cv2.resize(image,(264,264))
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         for i in range(iteration):
             counter = counter + 1

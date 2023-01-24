@@ -4,10 +4,11 @@ from PIL import Image
 import os
 from pathlib import Path
 import re
+import shutil
 
 parentDir = Path(__file__).parents[1] #Script -> AIPhoto
-randDirPath = parentDir / "background"
-targetsPath = "C:\\Users\\nicco\\Documents\\PlatformIO\\Projects\\intecsBraccio\\AIPhoto\\transferLearning\\PhotoDetection\\train"
+randDirPath = "C:\\Users\\nicco\\transfer_learning_automation\\imageClassification\\background"
+targetsPath = "C:\\Users\\nicco\\transfer_learning_automation\\imageClassification\\rawdata"
 randDir = os.listdir(randDirPath)
 targets = os.listdir(targetsPath)
 destinationPath = targetsPath + "\\randomized"
@@ -70,5 +71,9 @@ for image in targetList :
         for bb in boundingBoxes:
             copyRandom.paste(rawIMG.crop((bb[0], bb[1], bb[2], bb[3] )), (bb[0], bb[1]))
         copyRandom.save(str(destinationPath) + "\\" + str(imgCounter) + "-" + str(randomCounter) + "-" + image)
+        
+        xmlsrc = str(targetsPath) +"\\"+image[0:-4]+".xml"
+        xmldst = str(destinationPath) + "\\" + str(imgCounter) + "-" + str(randomCounter) + "-" + image[:-4]+".xml"
+        shutil.copy(xmlsrc, xmldst)
         randomCounter = randomCounter + 1
     imgCounter = imgCounter + 1

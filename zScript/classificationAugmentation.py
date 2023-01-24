@@ -25,7 +25,6 @@ for dir in dirs:
             continue
         imagePath = dirPath +"\\" +imageName 
         image = cv2.imread( imagePath )    
-        image = cv2.resize(image,(264,264))
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         counter = 0
         for i in range(iteration):

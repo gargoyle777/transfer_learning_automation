@@ -7,7 +7,7 @@ defaultSource = "screenDetection"
 
 parentDir = Path(__file__).parents[1] #Script -> AIPhoto
 
-sourcePath = "C:\\Users\\nicco\\Desktop\\singleicon\\cuttedBoxes"
+sourcePath = "C:\\Users\\nicco\\transfer_learning_automation\\imageClassification\\rawnegative"
 
 print("enter new base name for photo:")
 base = input()

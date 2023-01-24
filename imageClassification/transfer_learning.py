@@ -82,9 +82,9 @@ def predict(model, test_image_name):
     
     test_image_tensor = transform(test_image)
     if torch.cuda.is_available():
-        test_image_tensor = test_image_tensor.view(1, 3, 224, 224).cuda()
+        test_image_tensor = test_image_tensor.view(1, 3, 512, 512).cuda()
     else:
-        test_image_tensor = test_image_tensor.view(1, 3, 224, 224)
+        test_image_tensor = test_image_tensor.view(1, 3, 512, 512)
     
     with torch.no_grad():
         model.eval()
@@ -348,6 +348,7 @@ def train_and_validate_B(model, loss_criterion, optimizer, epochs=60):
 # Applying Transforms to the Data
 image_transforms = { 
     'train': transforms.Compose([
+        transforms.Resize(size=512),
         transforms.RandomRotation(degrees=5),
         transforms.RandomHorizontalFlip(p=0.3),
         transforms.ColorJitter(brightness=(0.5,1.5),contrast=(1),saturation=(0.5,1.5),hue=(-0.1,0.1)),
@@ -357,14 +358,14 @@ image_transforms = {
                              [0.229, 0.224, 0.225])
     ]),
     'valid': transforms.Compose([
-        transforms.Resize(size=256),
+        transforms.Resize(size=512),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406],
                              [0.229, 0.224, 0.225])
     ]),
     'test': transforms.Compose([
         transforms.Pad(padding = [random.randrange(0,50),random.randrange(0,50),random.randrange(0,50),random.randrange(0,50)] ,padding_mode='edge'),
-        transforms.Resize(size=256),
+        transforms.Resize(size=512),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406],
                              [0.229, 0.224, 0.225])
