@@ -4,7 +4,6 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 import time
-from torchsummary import summary
 import random
 import numpy as np
 import matplotlib.pyplot as plt
