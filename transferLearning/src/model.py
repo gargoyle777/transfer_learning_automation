@@ -5,6 +5,7 @@ from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 def create_model(num_classes):
     
     # load Faster RCNN pre-trained model
+    # soon pretrained will get deprecated, just change it to weight
     model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
     
     # get the number of input features 
