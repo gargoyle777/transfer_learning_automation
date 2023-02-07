@@ -10,8 +10,8 @@ dig = True      #dig in subdir
 padColor = 255
 padColor = [padColor]*3
 
-th = 224
-tw = 224
+th = 224 #target height i want to have
+tw = 224 #target wideness i want to have
 for path in paths:
     files = os.listdir(path)
     for file in files:

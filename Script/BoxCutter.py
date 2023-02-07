@@ -5,6 +5,7 @@ import re
 
 defaultDestination = "cuttedBoxes"
 sourcePath = "C:\\Users\\nicco\\Documents\\PlatformIO\\Projects\\ScreenAI\\src\\freshimg"
+
 if not os.path.isdir(sourcePath):
     raise Exception("directory doesn't exist")
 destinationPath = sourcePath +"\\"+ defaultDestination

@@ -5,6 +5,8 @@ import re
 from xml.etree import ElementTree as et
 import copy 
 
+#could be adapted to any target
+
 path =""
 newdir = path + "\\screencut"
 os.mkdir(newdir)

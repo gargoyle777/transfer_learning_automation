@@ -1,5 +1,5 @@
 #cut and dowwnsize photo for EI
-#fix their xml if available, but just enought to make the labeler work
+#fix their xml if available, but just enough to make the labeler work
 from PIL import Image
 import os
 from pathlib import Path
